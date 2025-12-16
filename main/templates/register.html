@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+<h2 class="title">📝 Create Your Account</h2>
+
+{% if error %}
+  <p class="error">{{ error }}</p>
+{% endif %}
+
+<form method="POST" class="form-box">
+  <!-- CSRF protection -->
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+  <div class="form-group">
+    <label for="username">Username:</label>
+    <input type="text" name="username" required>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" name="email" required>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password:</label>
+    <input type="password" name="password" required>
+  </div>
+
+  <button type="submit" class="neon-button">Register</button>
+</form>
+
+<div class="form-footer">
+  Already have an account?
+  <a href="{{ url_for('login') }}">Login here</a>
+</div>
+
+<style>
+  .form-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--neon);
+    border-radius: var(--radius);
+    padding: 30px;
+    max-width: 420px;
+    margin: 0 auto;
+    box-shadow: 0 0 12px var(--neon);
+    backdrop-filter: blur(10px);
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+  }
+  .form-group label {
+    color: var(--neon);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .form-group input {
+    padding: 12px;
+    border: 1px solid var(--neon);
+    border-radius: 8px;
+    background: #0b0f14;
+    color: var(--text);
+    font-size: 15px;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .neon-button {
+    background: none;
+    border: 2px solid var(--neon);
+    color: var(--neon);
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .neon-button:hover {
+    background: var(--neon);
+    color: #0b0f14;
+    box-shadow: 0 0 10px var(--neon);
+  }
+  .form-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .form-footer a {
+    color: var(--neon);
+    text-decoration: underline;
+    margin-left: 5px;
+  }
+  .error {
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+</style>
+
+{% endblock %}

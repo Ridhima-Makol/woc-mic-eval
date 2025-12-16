@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title %}Security Demo{% endblock %}
+{% block content %}
+
+<h2 class="title">🛡️ Security Demo</h2>
+<p class="subtitle">Explore live security concepts: XSS testing and password hashing.</p>
+
+<div class="demo-section">
+  <h3>⚡ XSS Tester</h3>
+  <form method="POST" class="form-box">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+      <label for="xss_input">Enter text (try HTML/JS):</label>
+      <input type="text" name="xss_input" placeholder="&lt;script&gt;alert('XSS')&lt;/script&gt;">
+    </div>
+    <button type="submit" class="neon-button">Test XSS</button>
+  </form>
+
+  {% if user_input is not none %}
+  <div class="result-box">
+    <h4>Rendered Output:</h4>
+    <div class="rendered-output">
+      {{ user_input|safe }}
+    </div>
+    <p class="note">Notice how unsafe input can execute scripts if not sanitized.</p>
+  </div>
+  {% endif %}
+</div>
+
+<hr class="divider">
+
+<div class="demo-section">
+  <h3>🔑 Password Hashing Demo</h3>
+  <form method="POST" class="form-box">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+      <label for="password_input">Enter a password:</label>
+      <input type="password" name="password_input" placeholder="YourSecret123" required>
+    </div>
+    <button type="submit" class="neon-button">Hash Password</button>
+  </form>
+
+  {% if hash_result %}
+  <div class="result-box">
+    <h4>Hashing Results:</h4>
+    <table class="styled-table">
+      <tr><th>Salt</th><td>{{ hash_result.salt }}</td></tr>
+      <tr><th>Hash</th><td>{{ hash_result.hash }}</td></tr>
+      <tr><th>Stored Value</th><td>{{ hash_result.stored }}</td></tr>
+      <tr><th>Verification</th><td>{{ '✔️ Valid' if hash_result.verification else '❌ Failed' }}</td></tr>
+    </table>
+    <p class="note">This uses PBKDF2 with SHA‑256, salt + pepper, and 100k iterations.</p>
+  </div>
+  {% endif %}
+</div>
+
+<hr class="divider">
+
+<div class="demo-section">
+  <h3>📜 Next Step</h3>
+  <p>After testing security features, you can review the tamper‑evident logs:</p>
+  <a href="{{ url_for('audit') }}" class="neon-button">View Audit Logs</a>
+</div>
+
+<style>
+  .demo-section { margin-bottom: 40px; }
+  .form-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--neon);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-top: 15px;
+    box-shadow: 0 0 12px var(--neon);
+  }
+  .form-group { margin-bottom: 15px; }
+  .form-group label { color: var(--neon); font-weight: 600; margin-bottom: 6px; display: block; }
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--neon);
+    border-radius: 6px;
+    background: #0b0f14;
+    color: var(--text);
+  }
+  .neon-button {
+    background: none;
+    border: 2px solid var(--neon);
+    color: var(--neon);
+    padding: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    display: inline-block;
+    text-align: center;
+  }
+  .neon-button:hover {
+    background: var(--neon);
+    color: #0b0f14;
+    box-shadow: 0 0 10px var(--neon);
+  }
+  .result-box {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .rendered-output {
+    border: 1px dashed var(--accent);
+    padding: 10px;
+    margin-top: 10px;
+    background: #111;
+    color: #fff;
+  }
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+    border: 2px solid var(--neon);
+  }
+  .styled-table th, .styled-table td {
+    padding: 8px 10px;
+    border: 1px solid var(--neon);
+    color: #ecf0f1;
+    text-align: left;
+  }
+  .styled-table th {
+    background-color: #00ffcc;
+    color: #111;
+  }
+  .note {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 8px;
+  }
+  .divider {
+    border: none;
+    border-top: 2px dashed var(--neon);
+    margin: 30px 0;
+  }
+</style>
+
+{% endblock %}

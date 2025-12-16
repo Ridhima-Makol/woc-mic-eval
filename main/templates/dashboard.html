@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<!-- 1. My Uploaded Files -->
+<h2 class="title">📂 My Uploaded Files</h2>
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Filename</th>
+      <th>Uploaded At</th>
+      <th>Shared With</th>
+      <th>Share</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for file in uploaded_files %}
+    <tr>
+      <td>{{ file.filename }}</td>
+      <td>{{ file.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+      <td>
+        {% if file.shared_with %}
+          {% for s in file.shared_with %}
+            {{ s.recipient }} ({{ s.role }}, exp: {{ s.expiry }})<br>
+          {% endfor %}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>
+        <form method="POST" action="{{ url_for('share_file', filename=file.filename) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <input type="text" name="recipient" placeholder="Recipient username" required>
+          <select name="role">
+            <option value="viewer">Viewer</option>
+            <option value="editor">Editor</option>
+            <option value="auditor">Auditor</option>
+          </select>
+          <button type="submit" class="share-btn">Share</button>
+        </form>
+      </td>
+      <td>
+        <!-- Owner actions -->
+        <a class="download-link"
+           href="{{ url_for('download', token='owner', owner=username, filename=file.filename) }}">
+           Download
+        </a>
+        <a class="download-link"
+           href="{{ url_for('preview_decrypted', owner=username, filename=file.filename) }}">
+           Preview
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- 2. Shared With Me -->
+<h2 class="title">🤝 Shared With Me</h2>
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Filename</th>
+      <th>Owner</th>
+      <th>Uploaded At</th>
+      <th>Role</th>
+      <th>Expiry</th>
+      <th>Download</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for file in shared_with_me %}
+    <tr>
+      <td>{{ file.filename }}</td>
+      <td>{{ file.owner }}</td>
+      <td>{{ file.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+      <td>{{ file.role }}</td>
+      <td>{{ file.expiry }}</td>
+      <td>
+        <a class="download-link"
+           href="{{ url_for('download', token=file.token, owner=file.owner, filename=file.filename) }}">
+           Download
+        </a>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6">No files shared with you yet.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- 3. Styling -->
+<style>
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 16px;
+    text-align: center;
+    border: 2px solid #00ffcc;
+  }
+  .styled-table th, .styled-table td {
+    padding: 12px 15px;
+    border: 1px solid #00ffcc;
+    color: #ecf0f1;
+  }
+  .styled-table th {
+    background-color: #00ffcc;
+    color: #111;
+  }
+  .share-btn {
+    background: #3498db;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .share-btn:hover {
+    background: #00ffcc;
+    color: #111;
+  }
+  .download-link {
+    display: inline-block;
+    background: none;
+    border: 2px solid var(--neon, #00ffcc);
+    color: var(--neon, #00ffcc);
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    margin: 0 4px;
+  }
+  .download-link:hover {
+    background: var(--neon, #00ffcc);
+    color: #111;
+    box-shadow: 0 0 10px var(--neon, #00ffcc);
+  }
+  select {
+    margin-left: 6px;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #00ffcc;
+    background: #111;
+    color: #ecf0f1;
+  }
+</style>
+
+{% endblock %}

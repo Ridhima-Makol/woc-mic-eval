@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}SecureApp{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --bg: #0a0f1c;
+      --glass: rgba(255, 255, 255, 0.05);
+      --neon: #00ffc3;
+      --accent: #ff2e88;
+      --text: #e0e0e0;
+      --radius: 12px;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      background-image:
+        linear-gradient(135deg, rgba(0,255,204,0.05) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(0,255,204,0.05) 25%, transparent 25%);
+      background-size: 40px 40px;
+    }
+
+    /* --- Fancy Navigation Bar --- */
+    nav {
+      backdrop-filter: blur(12px);
+      background-color: var(--glass);
+      border-bottom: 2px solid var(--neon);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      box-shadow: 0 0 10px var(--neon);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    nav a {
+      color: var(--neon);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      position: relative;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    /* Animated underline */
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 2px;
+      background: var(--neon);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+      text-shadow: 0 0 8px var(--neon);
+    }
+
+    nav a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    /* Fade-in animation for nav */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Container --- */
+    .container {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: var(--glass);
+      border: 2px solid var(--neon);
+      border-radius: var(--radius);
+      box-shadow: 0 0 16px var(--neon);
+      backdrop-filter: blur(10px);
+    }
+
+    h2.title {
+      text-align: center;
+      color: var(--neon);
+      margin-bottom: 24px;
+      text-shadow: 0 0 6px var(--neon);
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('security_demo') }}">Security Demo</a>
+    <a href="{{ url_for('upload') }}">Upload</a>
+    <a href="{{ url_for('audit') }}">Audit</a>
+    <a href="{{ url_for('profile') }}">Profile</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </nav>
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+</body>
+</html>

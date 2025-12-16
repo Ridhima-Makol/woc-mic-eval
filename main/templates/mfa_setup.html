@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}MFA Setup{% endblock %}
+{% block content %}
+
+<h2 class="title">🔑 MFA Setup</h2>
+
+<div class="form-box">
+  <p>Scan this QR code with Google Authenticator, Authy, or any TOTP app:</p>
+  <div class="qr-wrap">
+    <img src="data:image/png;base64,{{ qr_b64 }}" alt="MFA QR Code">
+  </div>
+
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+      <label for="mfa_code">Enter the 6-digit code:</label>
+      <input type="text" name="mfa_code" required>
+    </div>
+    <button type="submit" class="neon-button">Verify</button>
+  </form>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  <div class="form-footer">
+    Already verified?
+    <a href="{{ url_for('login') }}">Proceed to Login</a>
+  </div>
+</div>
+
+<style>
+  .qr-wrap {
+    text-align: center;
+    margin: 20px 0;
+  }
+  .qr-wrap img {
+    border: 2px solid var(--neon);
+    border-radius: var(--radius);
+    box-shadow: 0 0 12px var(--neon);
+    max-width: 220px;
+  }
+  .error {
+    color: var(--accent);
+    text-align: center;
+    margin-top: 12px;
+    font-weight: 600;
+  }
+  .form-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .form-footer a {
+    color: var(--neon);
+    text-decoration: underline;
+    margin-left: 5px;
+  }
+</style>
+
+{% endblock %}

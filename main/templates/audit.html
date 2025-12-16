@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Audit Logs{% endblock %}
+{% block content %}
+
+<h2 class="title">📜 Tamper‑Evident Audit Logs</h2>
+<p class="subtitle">Every entry is chained with a hash to prove integrity.</p>
+
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>Actor</th>
+      <th>Action</th>
+      <th>Resource</th>
+      <th>Result</th>
+      <th>Extra</th>
+      <th>Integrity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if logs %}
+      {% for e in logs %}
+      <tr>
+        <td>{{ e.ts }}</td>
+        <td>{{ e.actor }}</td>
+        <td>{{ e.action }}</td>
+        <td>{{ e.resource }}</td>
+        <td>{{ e.result }}</td>
+        <td>{{ e.extra }}</td>
+        <td><span class="hash-proof">✅ {{ e.entry_hash[:12] }}…</span></td>
+      </tr>
+      {% endfor %}
+    {% else %}
+      <tr><td colspan="7">No audit entries yet</td></tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<style>
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 15px;
+    text-align: center;
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 12px #00ffcc;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .styled-table th, .styled-table td {
+    padding: 10px 14px;
+    border: 1px solid #00ffcc;
+    color: #ecf0f1;
+  }
+  .styled-table th {
+    background-color: #00ffcc;
+    color: #111;
+    text-shadow: 0 0 4px #00ffcc;
+  }
+  td[colspan="7"] {
+    font-style: italic;
+    color: #aaa;
+  }
+  .hash-proof {
+    font-size: 13px;
+    color: #00ffcc;
+    font-weight: bold;
+    text-shadow: 0 0 6px #00ffcc;
+  }
+</style>
+
+{% endblock %}

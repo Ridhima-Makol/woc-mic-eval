@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+
+<h2 class="title">👤 Your Profile</h2>
+
+<div class="profile-card">
+  <div class="profile-row"><strong>Username:</strong> {{ username }}</div>
+  <div class="profile-row"><strong>Email:</strong> {{ email }}</div>
+  <div class="profile-row"><strong>Role:</strong> {{ role }}</div>
+  <div class="profile-row"><strong>MFA Status:</strong> {{ mfa_status }}</div>
+  <div class="profile-row"><strong>Files Uploaded:</strong> {{ uploaded_count }}</div>
+  <div class="profile-row"><strong>Files Shared With You:</strong> {{ shared_with_me_count }}</div>
+  <div class="profile-row"><strong>Files You Shared:</strong> {{ shared_count }}</div>
+</div>
+
+<div class="profile-actions">
+  <button class="neon-button">Download My Data</button>
+  <button class="neon-button">Edit Profile</button>
+</div>
+
+<style>
+  .profile-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--neon);
+    border-radius: var(--radius);
+    padding: 25px;
+    font-size: 16px;
+    color: var(--text);
+    max-width: 600px;
+    margin: 30px auto;
+    box-shadow: 0 0 12px var(--neon);
+    backdrop-filter: blur(10px);
+  }
+  .profile-row {
+    margin: 12px 0;
+    border-bottom: 1px solid var(--neon);
+    padding-bottom: 6px;
+  }
+  .profile-actions {
+    text-align: center;
+    margin-top: 30px;
+  }
+  .neon-button {
+    background: none;
+    border: 2px solid var(--neon);
+    color: var(--neon);
+    padding: 10px 20px;
+    font-size: 15px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+  }
+  .neon-button:hover {
+    background: var(--neon);
+    color: #0b0f14;
+    box-shadow: 0 0 10px var(--neon);
+  }
+</style>
+
+{% endblock %}
